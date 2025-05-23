@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Uploaded Orders</title>
+</head>
+<body>
+  <h2>Admin Panel: View Uploaded Orders</h2>
+  <table border="1" id="orderTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>File Name</th>
+        <th>Upload Time</th>
+        <th>Download</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <br><a href="index.html">Go to Upload Page</a>
+
+  <script>
+    const uploads = JSON.parse(localStorage.getItem("uploads") || "[]");
+    const tbody = document.querySelector("#orderTable tbody");
+
+    uploads.forEach(order => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${order.name}</td>
+        <td>${order.fileName}</td>
+        <td>${order.timestamp}</td>
+        <td><a href="${order.fileData}" download="${order.fileName}">Download</a></td>
+      `;
+      tbody.appendChild(row);
+    });
+  </script>
+</body>
+</html>
