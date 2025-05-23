@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Print Order Upload</title>
+  <meta charset="UTF-8" />
+  <title>Upload Print Order</title>
 </head>
 <body>
   <h2>Upload Your Print Order</h2>
-  <form action="https://scprint.infinityfreeapp.com/upload.php" method="POST" enctype="multipart/form-data">
-    <label>Name: <input type="text" name="username" required></label><br><br>
-    <label>Select file: <input type="file" name="file" required></label><br><br>
+  <form action="http://scprint.infinityfreeapp.com/upload.php" method="post" enctype="multipart/form-data">
+    <label for="username">Your Name:</label>
+    <input type="text" name="username" required /><br><br>
+
+    <label for="file">Select File:</label>
+    <input type="file" name="file" required /><br><br>
+
     <button type="submit">Upload</button>
   </form>
-
-  <br>
-  <a href="admin.html">Go to Admin Panel</a>
 </body>
 </html>
