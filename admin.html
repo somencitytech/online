@@ -1,39 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Admin - Uploaded Orders</title>
+  <title>Admin Panel - Uploaded Files</title>
+  <style>
+    table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
+  </style>
 </head>
 <body>
-  <h2>Admin Panel: View Uploaded Orders</h2>
-  <table border="1" id="orderTable">
+  <h2>Uploaded Print Orders</h2>
+  <table id="uploadsTable">
     <thead>
       <tr>
         <th>Name</th>
         <th>File Name</th>
-        <th>Upload Time</th>
+        <th>Uploaded At</th>
         <th>Download</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
-
-  <br><a href="index.html">Go to Upload Page</a>
+  <br>
+  <a href="index.html">Go to Upload Page</a>
 
   <script>
-    const uploads = JSON.parse(localStorage.getItem("uploads") || "[]");
-    const tbody = document.querySelector("#orderTable tbody");
+    async function fetchUploads() {
+      try {
+        const response = await fetch('https://scprint.infinityfreeapp.com/list_uploads.php');
+        if (!response.ok) throw new Error('Failed to fetch uploads');
+        const uploads = await response.json();
 
-    uploads.forEach(order => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${order.name}</td>
-        <td>${order.fileName}</td>
-        <td>${order.timestamp}</td>
-        <td><a href="${order.fileData}" download="${order.fileName}">Download</a></td>
-      `;
-      tbody.appendChild(row);
-    });
+        const tbody = document.querySelector('#uploadsTable tbody');
+        tbody.innerHTML = '';
+
+        uploads.forEach(upload => {
+          const tr = document.createElement('tr');
+
+          const nameTd = document.createElement('td');
+          nameTd.textContent = upload.username;
+          tr.appendChild(nameTd);
+
+          const fileTd = document.createElement('td');
+          fileTd.textContent = upload.filename;
+          tr.appendChild(fileTd);
+
+          const dateTd = document.createElement('td');
+          dateTd.textContent = upload.uploaded_at;
+          tr.appendChild(dateTd);
+
+          const downloadTd = document.createElement('td');
+          const link = document.createElement('a');
+          link.href = `https://scprint.infinityfreeapp.com/uploads/${encodeURIComponent(upload.filename)}`;
+          link.textContent = 'Download';
+          link.setAttribute('download', '');
+          downloadTd.appendChild(link);
+          tr.appendChild(downloadTd);
+
+          tbody.appendChild(tr);
+        });
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    fetchUploads();
   </script>
 </body>
 </html>
