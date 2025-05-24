@@ -3,10 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <title>Admin Upload List</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 80%;
+      margin: 20px auto;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+  </style>
 </head>
 <body>
-  <h2>Uploaded Files</h2>
-  <table border="1">
+  <h2 style="text-align: center;">Uploaded Files</h2>
+  <table>
     <thead>
       <tr>
         <th>Username</th>
@@ -16,28 +31,42 @@
       </tr>
     </thead>
     <tbody id="uploadTable">
+      <tr><td colspan="4">Loading...</td></tr>
     </tbody>
   </table>
 
   <script>
-    fetch("http://scprint.infinityfreeapp.com/list_uploads.php")
-      .then(res => res.json())
+    fetch("https://scprint.infinityfreeapp.com/list_uploads.php")
+      .then(res => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
       .then(data => {
         const table = document.getElementById("uploadTable");
+        table.innerHTML = ""; // Clear the "Loading..." row
+
+        if (!Array.isArray(data) || data.length === 0) {
+          table.innerHTML = "<tr><td colspan='4'>No uploads found.</td></tr>";
+          return;
+        }
+
         data.forEach(row => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${row.username}</td>
             <td>${row.filename}</td>
             <td>${row.uploaded_at}</td>
-            <td><a href="http://scprint.infinityfreeapp.com/uploads/${row.filename}" target="_blank">Download</a></td>
+            <td><a href="https://scprint.infinityfreeapp.com/uploads/${encodeURIComponent(row.filename)}" target="_blank">Download</a></td>
           `;
           table.appendChild(tr);
         });
       })
       .catch(err => {
-        console.error(err);
-        alert("Failed to load upload list.");
+        console.error("Fetch error:", err);
+        const table = document.getElementById("uploadTable");
+        table.innerHTML = "<tr><td colspan='4'>Failed to load upload list.</td></tr>";
       });
   </script>
 </body>
