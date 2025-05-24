@@ -36,7 +36,7 @@
   </table>
 
   <script>
-    fetch("https://scprint.infinityfreeapp.com/list_uploads.php")
+    fetch("http://scprint.infinityfreeapp.com/list_uploads.php")
       .then(res => {
         if (!res.ok) {
           throw new Error("Network response was not ok");
@@ -58,7 +58,7 @@
             <td>${row.username}</td>
             <td>${row.filename}</td>
             <td>${row.uploaded_at}</td>
-            <td><a href="https://scprint.infinityfreeapp.com/uploads/${encodeURIComponent(row.filename)}" target="_blank">Download</a></td>
+            <td><a href="http://scprint.infinityfreeapp.com/uploads/${encodeURIComponent(row.filename)}" target="_blank">Download</a></td>
           `;
           table.appendChild(tr);
         });
